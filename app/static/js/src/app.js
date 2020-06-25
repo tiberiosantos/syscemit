@@ -74,7 +74,6 @@ var app = {
           if (value.length) {
             params.set(field, value);
           }
-          params.set('grid', 1);
           url.search = params.toString();
           $('#results').load(url.toString().concat(' #results tr'), function() {
             var state = {};
@@ -108,7 +107,7 @@ var app = {
         load: function(query, callback) {
           var city = this.$input.parent().parent().find('.city').val();
           if (!query.length || query.length < 2 || !city.length) return callback();
-          $.get('/enderecos/?filters-street=' + query + '&filters-city_id=' + city)
+          $.get('/enderecos/?json=1&filters-street=' + query + '&filters-city_id=' + city)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -168,7 +167,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/medicos/?filters-name=' + query + '&filters-crm=' + query)
+          $.get('/medicos/?json=1&filters-name=' + query + '&filters-crm=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -211,7 +210,7 @@ var app = {
         load: function(query, callback) {
           var zone = $('.zone').val();
           if (!query.length || !zone.length) return callback();
-          $.get('/tumulos/?filters-street=' + query + '&filters-zone_id=' + zone)
+          $.get('/tumulos/?json=1&filters-street=' + query + '&filters-zone_id=' + zone)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -236,7 +235,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/cartorios/?filters-name=' + query)
+          $.get('/cartorios/?json=1&filters-name=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {
@@ -261,7 +260,7 @@ var app = {
         },
         load: function(query, callback) {
           if (!query.length || query.length < 2) return callback();
-          $.get('/regioes/?filters-description=' + query)
+          $.get('/regioes/?json=1&filters-description=' + query)
             .done(function(data) {
               callback(data.result);
             }).fail(function() {

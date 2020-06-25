@@ -15,8 +15,8 @@ bp = Blueprint('zones', __name__, url_prefix='/regioes')
 @login_required
 def index():
     form = ZoneSearchForm(request.args)
-    grid = request.args.get('grid', 0, type=bool)
     export = request.args.get('export', 0, type=int)
+    json = request.args.get('json', 0, type=int)
     filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
@@ -30,7 +30,7 @@ def index():
                                               'xlsx',
                                               file_name='Regiões.xlsx')
 
-    if request.is_xhr and not grid:
+    if json:
         return jsonify({'result': [z.serialize() for z in zones]})
 
     return render_template('zones/index.html',

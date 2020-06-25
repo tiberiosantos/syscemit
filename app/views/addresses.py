@@ -15,8 +15,8 @@ bp = Blueprint('addresses', __name__, url_prefix='/enderecos')
 @login_required
 def index():
     form = AddressSearchForm(request.args)
-    grid = request.args.get('grid', 0, type=int)
     export = request.args.get('export', 0, type=int)
+    json = request.args.get('json', 0, type=int)
     filters = form.filters.data
     criteria = form.criteria.data
     order = form.order.data
@@ -30,7 +30,7 @@ def index():
                                               'xlsx',
                                               file_name='Endereços.xlsx')
 
-    if request.is_xhr and not grid:
+    if json:
         return jsonify({'result': [a.serialize() for a in addresses]})
 
     return render_template('addresses/index.html',
