@@ -59,7 +59,8 @@ class Zone(CRUDMixin, db.Model):
             reader = csv.DictReader(f, delimiter='\t')
             zones = [
                 cls(
-                    description=row['DESCRIÇÃO'], complement=row['COMPLEMENTO']
+                    description=row['DESCRIÇÃO'],
+                    complement=row['COMPLEMENTO']
                 ) for row in reader
             ]
         db.session.bulk_save_objects(zones)

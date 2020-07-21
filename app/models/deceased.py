@@ -40,7 +40,9 @@ class Deceased(CRUDMixin, db.Model):
     doctor_id = db.Column(
         db.Integer, db.ForeignKey('doctors.id'), nullable=False
     )
-    grave_id = db.Column(db.Integer, db.ForeignKey('graves.id'), nullable=False)
+    grave_id = db.Column(
+        db.Integer, db.ForeignKey('graves.id'), nullable=False
+    )
     registry_id = db.Column(
         db.Integer, db.ForeignKey('registries.id'), nullable=False
     )
@@ -117,11 +119,11 @@ class Deceased(CRUDMixin, db.Model):
             filters += (Grave.zone_id == Zone.id, )
 
         return cls.query.join(*joins
-                             ).filter(*filters).order_by(*orders).paginate(
-                                 page,
-                                 per_page=current_app.config['PER_PAGE'],
-                                 error_out=False
-                             )
+                              ).filter(*filters).order_by(*orders).paginate(
+                                  page,
+                                  per_page=current_app.config['PER_PAGE'],
+                                  error_out=False
+                              )
 
     @staticmethod
     def dump(pagination):
@@ -176,7 +178,8 @@ class Deceased(CRUDMixin, db.Model):
                                             )
                                         )
                                     )
-                                ), d.address_death.city.serialize().get('name')
+                                ),
+                                d.address_death.city.serialize().get('name')
                                 if d.address_death else ''
                             )
                         )

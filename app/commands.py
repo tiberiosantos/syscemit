@@ -93,7 +93,7 @@ def init_app(app):
         '''Format and organize code according to pep 8'''
         formaters = [
             'isort --verbose *.py app/',
-            'yapf --in-place --recursive --style=facebook --verbose *.py app/'
+            'yapf --in-place --recursive --verbose *.py app/'
         ]
         for f in formaters:
             print('[*] Running {}'.format(f.split()[0]))

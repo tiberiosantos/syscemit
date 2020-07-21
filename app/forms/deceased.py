@@ -103,8 +103,8 @@ class DeceasedForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(DeceasedForm, self).__init__(*args, **kwargs)
         self.ethnicity_id.choices = [
-            (e.id, e.description)
-            for e in Ethnicity.query.order_by(Ethnicity.description.asc()).all()
+            (e.id, e.description) for e in
+            Ethnicity.query.order_by(Ethnicity.description.asc()).all()
         ]
         self.ethnicity_id.choices.insert(0, (0, ''))
         self.civil_state_id.choices = [
@@ -128,7 +128,9 @@ class DeceasedForm(FlaskForm):
 
         if cls.death_address_id.data:
             address = Address.get_or_404(cls.death_address_id.data)
-            cls.death_address_id.choices = [tuple(address.serialize().values())]
+            cls.death_address_id.choices = [
+                tuple(address.serialize().values())
+            ]
             cls.death_city_id.data = address.city.id
             cls.death_city_id.choices = [
                 tuple(address.city.serialize().values())

@@ -15,7 +15,9 @@ from .states import State
 class City(CRUDMixin, db.Model):
     __tablename__ = 'cities'
     name = db.Column(db.String(40), nullable=False)
-    state_id = db.Column(db.Integer, db.ForeignKey('states.id'), nullable=False)
+    state_id = db.Column(
+        db.Integer, db.ForeignKey('states.id'), nullable=False
+    )
     registries = db.relationship('Registry', backref='city', lazy='dynamic')
     deceased = db.relationship('Deceased', backref='city', lazy='dynamic')
     addresses = db.relationship('Address', backref='city', lazy='dynamic')
@@ -34,11 +36,11 @@ class City(CRUDMixin, db.Model):
         else:
             orders += (cls.name.asc(), )
         return cls.query.join(*joins
-                             ).filter(*filters_).order_by(*orders).paginate(
-                                 page,
-                                 per_page=current_app.config['PER_PAGE'],
-                                 error_out=False
-                             )
+                              ).filter(*filters_).order_by(*orders).paginate(
+                                  page,
+                                  per_page=current_app.config['PER_PAGE'],
+                                  error_out=False
+                              )
 
     @classmethod
     def populate(cls):
@@ -54,7 +56,10 @@ class City(CRUDMixin, db.Model):
         db.session.commit()
 
     def serialize(self):
-        return {'id': self.id, 'name': '{s.name} - {s.state.uf}'.format(s=self)}
+        return {
+            'id': self.id,
+            'name': '{s.name} - {s.state.uf}'.format(s=self)
+        }
 
     def __repr__(self):
         return '{0}({1})'.format(self.__class__.__name__, self.name)

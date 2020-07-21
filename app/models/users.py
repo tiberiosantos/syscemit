@@ -47,11 +47,11 @@ class User(CRUDMixin, UserMixin, db.Model):
             filters += (cls.user_type_id == UserType.id, )
 
         return cls.query.join(*joins
-                             ).filter(*filters).order_by(*orders).paginate(
-                                 page,
-                                 per_page=current_app.config['PER_PAGE'],
-                                 error_out=False
-                             )
+                              ).filter(*filters).order_by(*orders).paginate(
+                                  page,
+                                  per_page=current_app.config['PER_PAGE'],
+                                  error_out=False
+                              )
 
     @staticmethod
     def dump(pagination):

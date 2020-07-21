@@ -2,8 +2,8 @@
 
 from .utils.helpers import HandleError
 from .views import (
-    addresses, auth, cities, deceased, doctors, graves, main, registries, users,
-    zones
+    addresses, auth, cities, deceased, doctors, graves, main, registries,
+    users, zones
 )
 
 

@@ -17,9 +17,10 @@ class AddressForm(FlaskForm):
          Length(1, 255)]
     )
     district = StringField(
-        'Bairro',
-        [InputRequired(message='Insira o bairro do endereço!'),
-         Length(1, 255)]
+        'Bairro', [
+            InputRequired(message='Insira o bairro do endereço!'),
+            Length(1, 255)
+        ]
     )
     city_id = SelectField(
         'Cidade', [InputRequired(message='Selecione a cidade do endereço!')],
@@ -52,6 +53,8 @@ class AddressSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
     filters = FormField(AddressHeadersForm)
     criteria = SelectField(
-        'Ordenar por', choices=get_fields(AddressHeadersForm), default='street'
+        'Ordenar por',
+        choices=get_fields(AddressHeadersForm),
+        default='street'
     )
     order = SelectField('Ordem', choices=ORDERS, default='asc')

@@ -62,11 +62,11 @@ class Address(CRUDMixin, db.Model):
             filters += (cls.city_id == City.id, )
 
         return cls.query.join(*joins
-                             ).filter(*filters).order_by(*orders).paginate(
-                                 page,
-                                 per_page=current_app.config['PER_PAGE'],
-                                 error_out=False
-                             )
+                              ).filter(*filters).order_by(*orders).paginate(
+                                  page,
+                                  per_page=current_app.config['PER_PAGE'],
+                                  error_out=False
+                              )
 
     @classmethod
     def populate(cls):
