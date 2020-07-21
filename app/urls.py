@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from .utils.helpers import HandleError
-from .views import (addresses, auth, cities, deceased, doctors, graves, main,
-                    registries, users, zones)
+from .views import (
+    addresses, auth, cities, deceased, doctors, graves, main, registries, users,
+    zones
+)
 
 
 def init_app(app):
-    app.register_blueprint(addresses.bp)
-    app.register_blueprint(auth.bp)
-    app.register_blueprint(cities.bp)
-    app.register_blueprint(deceased.bp)
-    app.register_blueprint(doctors.bp)
-    app.register_blueprint(graves.bp)
-    app.register_blueprint(main.bp)
-    app.register_blueprint(registries.bp)
-    app.register_blueprint(users.bp)
-    app.register_blueprint(zones.bp)
+    for blueprint in (
+        addresses, auth, cities, deceased, doctors, graves, main, registries,
+        users, zones
+    ):
+        app.register_blueprint(blueprint.bp)
 
     # errors
     errors = {

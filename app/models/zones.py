@@ -2,13 +2,13 @@
 
 import csv
 import os
-
 from itertools import chain
 from re import DOTALL, findall
 
 from flask import current_app
 
 from config import basedir
+
 from ..extensions import db
 from ..mixins import CRUDMixin
 
@@ -27,8 +27,10 @@ class Zone(CRUDMixin, db.Model):
 
         for k, v in search.items():
             if k in columns and v:
-                if (k == 'description'
-                        and findall(r'^\w+ \w+$', v, flags=DOTALL)):
+                if (
+                    k == 'description' and
+                    findall(r'^\w+ \w+$', v, flags=DOTALL)
+                ):
                     v = v.split()
                     filters += (
                         cls.description.ilike('%' + v[0] + '%'),
@@ -41,7 +43,8 @@ class Zone(CRUDMixin, db.Model):
             orders = (getattr(getattr(cls, criteria), order)(), )
 
         return cls.query.filter(*filters).order_by(*orders).paginate(
-            page, per_page=current_app.config['PER_PAGE'], error_out=False)
+            page, per_page=current_app.config['PER_PAGE'], error_out=False
+        )
 
     def serialize(self):
         name = [self.description]
@@ -55,9 +58,9 @@ class Zone(CRUDMixin, db.Model):
         with open(path) as f:
             reader = csv.DictReader(f, delimiter='\t')
             zones = [
-                cls(description=row['DESCRIÇÃO'],
-                    complement=row['COMPLEMENTO'])
-                for row in reader
+                cls(
+                    description=row['DESCRIÇÃO'], complement=row['COMPLEMENTO']
+                ) for row in reader
             ]
         db.session.bulk_save_objects(zones)
         db.session.commit()

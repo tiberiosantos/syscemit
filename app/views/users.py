@@ -26,21 +26,23 @@ def index():
 
     if export:
         export = User.dump(pagination)
-        return excel.make_response_from_array(export,
-                                              'xlsx',
-                                              file_name='Usuários.xlsx')
+        return excel.make_response_from_array(
+            export, 'xlsx', file_name='Usuários.xlsx'
+        )
 
-    return render_template('users/index.html',
-                           icon='fa-users',
-                           title='Usuários',
-                           clean_url=url_for('users.index'),
-                           create_url=url_for('users.create'),
-                           form=form,
-                           filters=filters,
-                           criteria=criteria,
-                           order=order,
-                           pagination=pagination,
-                           users=users)
+    return render_template(
+        'users/index.html',
+        icon='fa-users',
+        title='Usuários',
+        clean_url=url_for('users.index'),
+        create_url=url_for('users.create'),
+        form=form,
+        filters=filters,
+        criteria=criteria,
+        order=order,
+        pagination=pagination,
+        users=users
+    )
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
@@ -55,12 +57,14 @@ def create():
         user.save()
         return jsonify({'redirect': url_for('users.index')})
 
-    return render_template('users/view.html',
-                           icon='fa-users',
-                           title='Adicionar Usuário',
-                           form=form,
-                           method='post',
-                           color='success')
+    return render_template(
+        'users/view.html',
+        icon='fa-users',
+        title='Adicionar Usuário',
+        form=form,
+        method='post',
+        color='success'
+    )
 
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
@@ -79,13 +83,15 @@ def edit(id):
         user.update()
         return jsonify({'redirect': url_for('users.index')})
 
-    return render_template('users/view.html',
-                           icon='fa-users',
-                           title=title,
-                           form=form,
-                           method='put',
-                           color='warning',
-                           view=bool(view))
+    return render_template(
+        'users/view.html',
+        icon='fa-users',
+        title=title,
+        form=form,
+        method='put',
+        color='warning',
+        view=bool(view)
+    )
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

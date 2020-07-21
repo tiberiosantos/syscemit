@@ -41,10 +41,12 @@ class Registry(CRUDMixin, db.Model):
             joins += (City, )
             filters += (cls.city_id == City.id, )
 
-        return cls.query.join(*joins).filter(*filters).order_by(
-            *orders).paginate(page,
-                              per_page=current_app.config['PER_PAGE'],
-                              error_out=False)
+        return cls.query.join(*joins
+                             ).filter(*filters).order_by(*orders).paginate(
+                                 page,
+                                 per_page=current_app.config['PER_PAGE'],
+                                 error_out=False
+                             )
 
     def serialize(self):
         name = ', '.join([self.name, self.city.serialize().get('name')])
@@ -53,8 +55,10 @@ class Registry(CRUDMixin, db.Model):
     @staticmethod
     def dump(pagination):
         headers = iter([('NOME', 'CIDADE')])
-        data = ((r.name, r.city.serialize().get('name') if r.city else '')
-                for r in pagination.query.all())
+        data = (
+            (r.name, r.city.serialize().get('name') if r.city else '')
+            for r in pagination.query.all()
+        )
         return chain(headers, data)
 
     def __repr__(self):

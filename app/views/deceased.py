@@ -25,21 +25,23 @@ def index():
 
     if export and current_user.is_admin():
         export = Deceased.dump(pagination)
-        return excel.make_response_from_array(export,
-                                              'xlsx',
-                                              file_name='Falecidos.xlsx')
+        return excel.make_response_from_array(
+            export, 'xlsx', file_name='Falecidos.xlsx'
+        )
 
-    return render_template('deceased/index.html',
-                           icon='fa-coffin',
-                           title='Falecidos',
-                           clean_url=url_for('deceased.index'),
-                           create_url=url_for('deceased.create'),
-                           form=form,
-                           filters=filters,
-                           criteria=criteria,
-                           order=order,
-                           pagination=pagination,
-                           deceased=deceased)
+    return render_template(
+        'deceased/index.html',
+        icon='fa-coffin',
+        title='Falecidos',
+        clean_url=url_for('deceased.index'),
+        create_url=url_for('deceased.create'),
+        form=form,
+        filters=filters,
+        criteria=criteria,
+        order=order,
+        pagination=pagination,
+        deceased=deceased
+    )
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
@@ -55,12 +57,14 @@ def create():
         deceased.save()
         return jsonify({'redirect': url_for('deceased.index')})
 
-    return render_template('deceased/view.html',
-                           icon='fa-coffin',
-                           title='Adicionar Falecido',
-                           form=form,
-                           method='post',
-                           color='success')
+    return render_template(
+        'deceased/view.html',
+        icon='fa-coffin',
+        title='Adicionar Falecido',
+        form=form,
+        method='post',
+        color='success'
+    )
 
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
@@ -84,13 +88,15 @@ def edit(id):
     print(form.errors)
     print('-' * 50)
 
-    return render_template('deceased/view.html',
-                           icon='fa-coffin',
-                           title=title,
-                           form=form,
-                           method='put',
-                           color='warning',
-                           view=bool(view))
+    return render_template(
+        'deceased/view.html',
+        icon='fa-coffin',
+        title=title,
+        form=form,
+        method='put',
+        color='warning',
+        view=bool(view)
+    )
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

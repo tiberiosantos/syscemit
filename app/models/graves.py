@@ -2,13 +2,13 @@
 
 import csv
 import os
-
 from itertools import chain
 from re import DOTALL, findall
 
 from flask import current_app
 
 from config import basedir
+
 from ..extensions import db
 from ..mixins import CRUDMixin
 from .zones import Zone
@@ -63,10 +63,12 @@ class Grave(CRUDMixin, db.Model):
             joins += (Zone, )
             filters += (cls.zone_id == Zone.id, )
 
-        return cls.query.join(*joins).filter(*filters).order_by(
-            *orders).paginate(page,
-                              per_page=current_app.config['PER_PAGE'],
-                              error_out=False)
+        return cls.query.join(*joins
+                             ).filter(*filters).order_by(*orders).paginate(
+                                 page,
+                                 per_page=current_app.config['PER_PAGE'],
+                                 error_out=False
+                             )
 
     def serialize(self):
         name = []
@@ -87,10 +89,11 @@ class Grave(CRUDMixin, db.Model):
         with open(path) as f:
             reader = csv.DictReader(f, delimiter='\t')
             graves = [
-                cls(street=row['RUA'],
+                cls(
+                    street=row['RUA'],
                     number=row['NÚMERO'],
-                    zone_id=zones[row['REGIÃO'] + '-' + row['COMPLEMENTO']])
-                for row in reader
+                    zone_id=zones[row['REGIÃO'] + '-' + row['COMPLEMENTO']]
+                ) for row in reader
             ]
         db.session.bulk_save_objects(graves)
         db.session.commit()
@@ -98,11 +101,15 @@ class Grave(CRUDMixin, db.Model):
     @staticmethod
     def dump(pagination):
         headers = iter([('RUA', 'NÚMERO', 'REGIÃO')])
-        data = ((g.street, g.number,
-                 g.zone.serialize().get('name') if g.zone else '')
-                for g in pagination.query.all())
+        data = (
+            (
+                g.street, g.number,
+                g.zone.serialize().get('name') if g.zone else ''
+            ) for g in pagination.query.all()
+        )
         return chain(headers, data)
 
     def __repr__(self):
-        return '{0}({1} {2})'.format(self.__class__.__name__, self.street,
-                                     self.number)
+        return '{0}({1} {2})'.format(
+            self.__class__.__name__, self.street, self.number
+        )

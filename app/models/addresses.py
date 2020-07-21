@@ -19,14 +19,18 @@ class Address(CRUDMixin, db.Model):
     district = db.Column(db.String(255), nullable=False)
     cep = db.Column(db.String(8), nullable=False)
     city_id = db.Column(db.Integer, db.ForeignKey('cities.id'), nullable=False)
-    home_address = db.relationship('Deceased',
-                                   foreign_keys='Deceased.home_address_id',
-                                   backref='address_home',
-                                   lazy='dynamic')
-    death_address = db.relationship('Deceased',
-                                    foreign_keys='Deceased.death_address_id',
-                                    backref='address_death',
-                                    lazy='dynamic')
+    home_address = db.relationship(
+        'Deceased',
+        foreign_keys='Deceased.home_address_id',
+        backref='address_home',
+        lazy='dynamic'
+    )
+    death_address = db.relationship(
+        'Deceased',
+        foreign_keys='Deceased.death_address_id',
+        backref='address_death',
+        lazy='dynamic'
+    )
 
     @classmethod
     def fetch(cls, search, criteria, order, page):
@@ -57,10 +61,12 @@ class Address(CRUDMixin, db.Model):
             joins += (City, )
             filters += (cls.city_id == City.id, )
 
-        return cls.query.join(*joins).filter(*filters).order_by(
-            *orders).paginate(page,
-                              per_page=current_app.config['PER_PAGE'],
-                              error_out=False)
+        return cls.query.join(*joins
+                             ).filter(*filters).order_by(*orders).paginate(
+                                 page,
+                                 per_page=current_app.config['PER_PAGE'],
+                                 error_out=False
+                             )
 
     @classmethod
     def populate(cls):
@@ -72,11 +78,12 @@ class Address(CRUDMixin, db.Model):
         with open(path) as f:
             reader = csv.DictReader(f, delimiter='\t')
             cities = [
-                cls(street=row['RUA'],
+                cls(
+                    street=row['RUA'],
                     district=row['BAIRRO'],
                     cep=row['CEP'],
-                    city_id=cities[row['CIDADE'] + '-' + row['ESTADO']])
-                for row in reader
+                    city_id=cities[row['CIDADE'] + '-' + row['ESTADO']]
+                ) for row in reader
             ]
         db.session.bulk_save_objects(cities)
         db.session.commit()
@@ -91,8 +98,10 @@ class Address(CRUDMixin, db.Model):
     @staticmethod
     def dump(pagination):
         headers = iter([('RUA', 'BAIRRO', 'CEP', 'CIDADE', 'ESTADO')])
-        data = ((a.street, a.district, a.cep, a.city.name, a.city.state.uf)
-                for a in pagination.query.all())
+        data = (
+            (a.street, a.district, a.cep, a.city.name, a.city.state.uf)
+            for a in pagination.query.all()
+        )
         return chain(headers, data)
 
     def __repr__(self):

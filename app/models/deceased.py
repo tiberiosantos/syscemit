@@ -30,22 +30,20 @@ class Deceased(CRUDMixin, db.Model):
     death_address_complement = db.Column(db.String(255))
     birthplace_id = db.Column(db.Integer, db.ForeignKey('cities.id'))
     civil_state_id = db.Column(db.Integer, db.ForeignKey('civil_states.id'))
-    ethnicity_id = db.Column(db.Integer,
-                             db.ForeignKey('ethnicities.id'),
-                             nullable=False)
+    ethnicity_id = db.Column(
+        db.Integer, db.ForeignKey('ethnicities.id'), nullable=False
+    )
     home_address_id = db.Column(db.Integer, db.ForeignKey('addresses.id'))
-    death_address_id = db.Column(db.Integer,
-                                 db.ForeignKey('addresses.id'),
-                                 nullable=False)
-    doctor_id = db.Column(db.Integer,
-                          db.ForeignKey('doctors.id'),
-                          nullable=False)
-    grave_id = db.Column(db.Integer,
-                         db.ForeignKey('graves.id'),
-                         nullable=False)
-    registry_id = db.Column(db.Integer,
-                            db.ForeignKey('registries.id'),
-                            nullable=False)
+    death_address_id = db.Column(
+        db.Integer, db.ForeignKey('addresses.id'), nullable=False
+    )
+    doctor_id = db.Column(
+        db.Integer, db.ForeignKey('doctors.id'), nullable=False
+    )
+    grave_id = db.Column(db.Integer, db.ForeignKey('graves.id'), nullable=False)
+    registry_id = db.Column(
+        db.Integer, db.ForeignKey('registries.id'), nullable=False
+    )
 
     @classmethod
     def fetch(cls, search, criteria, order, page):
@@ -59,8 +57,10 @@ class Deceased(CRUDMixin, db.Model):
                 if k == 'birthplace_id':
                     filters += (City.name.ilike('%' + v + '%'), )
                     items.append(k)
-                elif (k == 'death_datetime'
-                      and findall(r'^\d{4} \d{4}$', v, flags=DOTALL)):
+                elif (
+                    k == 'death_datetime' and
+                    findall(r'^\d{4} \d{4}$', v, flags=DOTALL)
+                ):
                     v = list(map(int, v.split()))
                     v[0] = datetime(v[0], 1, 1)
                     v[1] = datetime(v[1], 12, 31)
@@ -116,50 +116,79 @@ class Deceased(CRUDMixin, db.Model):
             joins += (Zone, )
             filters += (Grave.zone_id == Zone.id, )
 
-        return cls.query.join(*joins).filter(*filters).order_by(
-            *orders).paginate(page,
-                              per_page=current_app.config['PER_PAGE'],
-                              error_out=False)
+        return cls.query.join(*joins
+                             ).filter(*filters).order_by(*orders).paginate(
+                                 page,
+                                 per_page=current_app.config['PER_PAGE'],
+                                 error_out=False
+                             )
 
     @staticmethod
     def dump(pagination):
-        headers = iter([
-            ('NOME', 'MATRÍCULA DO ÓBITO', 'GÊNERO', 'ETNIA', 'ESTADO CIVIL',
-             'DATA DE NASCIMENTO', 'IDADE', 'NATURALIDADE', 'FILIAÇÃO',
-             'ENDEREÇO RESIDENCIAL', 'DATA DE FALECIMENTO',
-             'ENDEREÇO DE FALECIMENTO', 'CAUSA DA MORTE', 'REGIÃO', 'TÚMULO',
-             'MÉDICO', 'CARTÓRIO', 'OBSERVAÇÕES')
-        ])
-        data = ((d.name, d.registration, d.gender,
-                 d.ethnicity.description
-                 if d.ethnicity else '',
-                 d.civil_states.description
-                 if d.civil_states else '',
-                 d.birth_date, d.age,
-                 d.city.serialize().get('name'), d.filiations,
-                 ', '.join(list(filter(None, (
-                     d.address_home.serialize().get('name')
-                     if d.address_home else '',
-                     ' - '.join(list(filter(None, (
-                         d.home_address_number,
-                         d.home_address_complement)))),
-                     d.address_home.city.serialize().get('name')
-                     if d.address_home else '')))),
-                 d.death_datetime,
-                 ', '.join(list(filter(None, (
-                     d.address_death.serialize().get('name')
-                     if d.address_death else '',
-                     ' - '.join(list(filter(None, (
-                         d.death_address_number,
-                         d.death_address_complement)))),
-                     d.address_death.city.serialize().get('name')
-                     if d.address_death else '')))),
-                 d.cause,
-                 d.grave.zone.serialize().get('name') if d.grave else '',
-                 d.grave.serialize().get('name') if d.grave else '',
-                 d.doctor.serialize().get('name') if d.doctor else '',
-                 d.registry.serialize().get('name') if d.registry else '',
-                 d.annotation) for d in pagination.query.all())
+        headers = iter(
+            [
+                (
+                    'NOME', 'MATRÍCULA DO ÓBITO', 'GÊNERO', 'ETNIA',
+                    'ESTADO CIVIL', 'DATA DE NASCIMENTO', 'IDADE',
+                    'NATURALIDADE', 'FILIAÇÃO', 'ENDEREÇO RESIDENCIAL',
+                    'DATA DE FALECIMENTO', 'ENDEREÇO DE FALECIMENTO',
+                    'CAUSA DA MORTE', 'REGIÃO', 'TÚMULO', 'MÉDICO', 'CARTÓRIO',
+                    'OBSERVAÇÕES'
+                )
+            ]
+        )
+        data = (
+            (
+                d.name, d.registration, d.gender,
+                d.ethnicity.description if d.ethnicity else '',
+                d.civil_states.description if d.civil_states else '',
+                d.birth_date, d.age, d.city.serialize().get('name'),
+                d.filiations, ', '.join(
+                    list(
+                        filter(
+                            None, (
+                                d.address_home.serialize().get('name')
+                                if d.address_home else '', ' - '.join(
+                                    list(
+                                        filter(
+                                            None, (
+                                                d.home_address_number,
+                                                d.home_address_complement
+                                            )
+                                        )
+                                    )
+                                ), d.address_home.city.serialize().get('name')
+                                if d.address_home else ''
+                            )
+                        )
+                    )
+                ), d.death_datetime, ', '.join(
+                    list(
+                        filter(
+                            None, (
+                                d.address_death.serialize().get('name')
+                                if d.address_death else '', ' - '.join(
+                                    list(
+                                        filter(
+                                            None, (
+                                                d.death_address_number,
+                                                d.death_address_complement
+                                            )
+                                        )
+                                    )
+                                ), d.address_death.city.serialize().get('name')
+                                if d.address_death else ''
+                            )
+                        )
+                    )
+                ), d.cause,
+                d.grave.zone.serialize().get('name') if d.grave else '',
+                d.grave.serialize().get('name') if d.grave else '',
+                d.doctor.serialize().get('name') if d.doctor else '',
+                d.registry.serialize().get('name') if d.registry else '',
+                d.annotation
+            ) for d in pagination.query.all()
+        )
         return chain(headers, data)
 
     def __repr__(self):

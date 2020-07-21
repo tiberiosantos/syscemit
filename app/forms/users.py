@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (FormField, IntegerField, PasswordField, SelectField,
-                     StringField, SubmitField)
+from wtforms import (
+    FormField, IntegerField, PasswordField, SelectField, StringField,
+    SubmitField
+)
 from wtforms.validators import InputRequired, Length, Required
 
 from ..models.user_types import UserType
@@ -13,22 +15,27 @@ class UserForm(FlaskForm):
     login = StringField(
         'Login',
         [InputRequired(message='Insira o login do usuário!'),
-         Length(1, 30)])
+         Length(1, 30)]
+    )
     name = StringField(
         'Nome',
         [InputRequired(message='Insira o nome do usuário!'),
-         Length(1, 255)])
+         Length(1, 255)]
+    )
     password = PasswordField(
-        'Senha', [InputRequired(message='Insira a senha do usuário!')])
+        'Senha', [InputRequired(message='Insira a senha do usuário!')]
+    )
     user_type_id = SelectField(
         'Tipo de Usuário', [Required(message='Selecione um tipo de usuário')],
-        coerce=int)
+        coerce=int
+    )
     submit = SubmitField('Salvar')
 
     def __init__(self, *args, **kwargs):
         super(UserForm, self).__init__(*args, **kwargs)
-        self.user_type_id.choices = [(u.id, u.description)
-                                     for u in UserType.query.all()]
+        self.user_type_id.choices = [
+            (u.id, u.description) for u in UserType.query.all()
+        ]
         self.user_type_id.choices.insert(0, (0, ''))
 
 
@@ -41,7 +48,7 @@ class UserHeadersForm(FlaskForm):
 class UserSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
     filters = FormField(UserHeadersForm)
-    criteria = SelectField('Ordenar por',
-                           choices=get_fields(UserHeadersForm),
-                           default='name')
+    criteria = SelectField(
+        'Ordenar por', choices=get_fields(UserHeadersForm), default='name'
+    )
     order = SelectField('Ordem', choices=ORDERS, default='asc')

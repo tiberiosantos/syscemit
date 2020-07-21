@@ -16,9 +16,9 @@ class User(CRUDMixin, UserMixin, db.Model):
     name = db.Column(db.String(255), nullable=False)
     login = db.Column(db.String(30), nullable=False)
     _pwd_hash = db.Column(db.String(255), nullable=False)
-    user_type_id = db.Column(db.Integer,
-                             db.ForeignKey('user_types.id'),
-                             nullable=False)
+    user_type_id = db.Column(
+        db.Integer, db.ForeignKey('user_types.id'), nullable=False
+    )
 
     @classmethod
     def fetch(cls, search, criteria, order, page):
@@ -46,16 +46,20 @@ class User(CRUDMixin, UserMixin, db.Model):
             joins += (UserType, )
             filters += (cls.user_type_id == UserType.id, )
 
-        return cls.query.join(*joins).filter(*filters).order_by(
-            *orders).paginate(page,
-                              per_page=current_app.config['PER_PAGE'],
-                              error_out=False)
+        return cls.query.join(*joins
+                             ).filter(*filters).order_by(*orders).paginate(
+                                 page,
+                                 per_page=current_app.config['PER_PAGE'],
+                                 error_out=False
+                             )
 
     @staticmethod
     def dump(pagination):
         headers = iter([('NOME', 'LOGIN', 'TIPO')])
-        data = ((u.name, u.login, u.user_type.description)
-                for u in pagination.query.all())
+        data = (
+            (u.name, u.login, u.user_type.description)
+            for u in pagination.query.all()
+        )
         return chain(headers, data)
 
     @property

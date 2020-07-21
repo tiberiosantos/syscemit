@@ -26,24 +26,26 @@ def index():
 
     if export and current_user.is_admin():
         export = Zone.dump(pagination)
-        return excel.make_response_from_array(export,
-                                              'xlsx',
-                                              file_name='Regiões.xlsx')
+        return excel.make_response_from_array(
+            export, 'xlsx', file_name='Regiões.xlsx'
+        )
 
     if json:
         return jsonify({'result': [z.serialize() for z in zones]})
 
-    return render_template('zones/index.html',
-                           icon='fa-map-marked-alt',
-                           title='Regiões',
-                           clean_url=url_for('zones.index'),
-                           create_url=url_for('zones.create'),
-                           form=form,
-                           filters=filters,
-                           criteria=criteria,
-                           order=order,
-                           pagination=pagination,
-                           zones=zones)
+    return render_template(
+        'zones/index.html',
+        icon='fa-map-marked-alt',
+        title='Regiões',
+        clean_url=url_for('zones.index'),
+        create_url=url_for('zones.create'),
+        form=form,
+        filters=filters,
+        criteria=criteria,
+        order=order,
+        pagination=pagination,
+        zones=zones
+    )
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
@@ -58,12 +60,14 @@ def create():
         zone.save()
         return jsonify({'redirect': url_for('zones.index')})
 
-    return render_template('zones/view.html',
-                           icon='fa-map-marked-alt',
-                           title='Adicionar Região',
-                           form=form,
-                           method='post',
-                           color='success')
+    return render_template(
+        'zones/view.html',
+        icon='fa-map-marked-alt',
+        title='Adicionar Região',
+        form=form,
+        method='post',
+        color='success'
+    )
 
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
@@ -82,13 +86,15 @@ def edit(id):
         zone.update()
         return jsonify({'redirect': url_for('zones.index')})
 
-    return render_template('zones/view.html',
-                           icon='fa-map-marked-alt',
-                           title=title,
-                           form=form,
-                           method='put',
-                           color='warning',
-                           view=bool(view))
+    return render_template(
+        'zones/view.html',
+        icon='fa-map-marked-alt',
+        title=title,
+        form=form,
+        method='put',
+        color='warning',
+        view=bool(view)
+    )
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

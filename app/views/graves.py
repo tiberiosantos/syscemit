@@ -26,24 +26,26 @@ def index():
 
     if export and current_user.is_admin():
         export = Grave.dump(pagination)
-        return excel.make_response_from_array(export,
-                                              'xlsx',
-                                              file_name='Túmulos.xlsx')
+        return excel.make_response_from_array(
+            export, 'xlsx', file_name='Túmulos.xlsx'
+        )
 
     if json:
         return jsonify({'result': [g.serialize() for g in graves]})
 
-    return render_template('graves/index.html',
-                           icon='fa-tombstone',
-                           title='Túmulos',
-                           clean_url=url_for('graves.index'),
-                           create_url=url_for('graves.create'),
-                           form=form,
-                           filters=filters,
-                           criteria=criteria,
-                           order=order,
-                           pagination=pagination,
-                           graves=graves)
+    return render_template(
+        'graves/index.html',
+        icon='fa-tombstone',
+        title='Túmulos',
+        clean_url=url_for('graves.index'),
+        create_url=url_for('graves.create'),
+        form=form,
+        filters=filters,
+        criteria=criteria,
+        order=order,
+        pagination=pagination,
+        graves=graves
+    )
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
@@ -59,12 +61,14 @@ def create():
         grave.save()
         return jsonify({'redirect': url_for('graves.index')})
 
-    return render_template('graves/view.html',
-                           icon='fa-tombstone',
-                           title='Adicionar Túmulo',
-                           form=form,
-                           method='post',
-                           color='success')
+    return render_template(
+        'graves/view.html',
+        icon='fa-tombstone',
+        title='Adicionar Túmulo',
+        form=form,
+        method='post',
+        color='success'
+    )
 
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
@@ -84,13 +88,15 @@ def edit(id):
         grave.update()
         return jsonify({'redirect': url_for('graves.index')})
 
-    return render_template('graves/view.html',
-                           icon='fa-tombstone',
-                           title=title,
-                           form=form,
-                           method='put',
-                           color='warning',
-                           view=bool(view))
+    return render_template(
+        'graves/view.html',
+        icon='fa-tombstone',
+        title=title,
+        form=form,
+        method='put',
+        color='warning',
+        view=bool(view)
+    )
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

@@ -26,24 +26,26 @@ def index():
 
     if export and current_user.is_admin():
         export = Registry.dump(pagination)
-        return excel.make_response_from_array(export,
-                                              'xlsx',
-                                              file_name='Cartórios.xlsx')
+        return excel.make_response_from_array(
+            export, 'xlsx', file_name='Cartórios.xlsx'
+        )
 
     if json:
         return jsonify({'result': [r.serialize() for r in registries]})
 
-    return render_template('registries/index.html',
-                           icon='fa-books',
-                           title='Cartórios',
-                           clean_url=url_for('registries.index'),
-                           create_url=url_for('registries.create'),
-                           form=form,
-                           filters=filters,
-                           criteria=criteria,
-                           order=order,
-                           pagination=pagination,
-                           registries=registries)
+    return render_template(
+        'registries/index.html',
+        icon='fa-books',
+        title='Cartórios',
+        clean_url=url_for('registries.index'),
+        create_url=url_for('registries.create'),
+        form=form,
+        filters=filters,
+        criteria=criteria,
+        order=order,
+        pagination=pagination,
+        registries=registries
+    )
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
@@ -59,12 +61,14 @@ def create():
         registry.save()
         return jsonify({'redirect': url_for('registries.index')})
 
-    return render_template('registries/view.html',
-                           icon='fa-books',
-                           title='Adicionar Cartório',
-                           form=form,
-                           method='post',
-                           color='success')
+    return render_template(
+        'registries/view.html',
+        icon='fa-books',
+        title='Adicionar Cartório',
+        form=form,
+        method='post',
+        color='success'
+    )
 
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
@@ -84,13 +88,15 @@ def edit(id):
         registry.update()
         return jsonify({'redirect': url_for('registries.index')})
 
-    return render_template('registries/view.html',
-                           icon='fa-books',
-                           title=title,
-                           form=form,
-                           method='put',
-                           color='warning',
-                           view=bool(view))
+    return render_template(
+        'registries/view.html',
+        icon='fa-books',
+        title=title,
+        form=form,
+        method='put',
+        color='warning',
+        view=bool(view)
+    )
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

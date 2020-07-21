@@ -26,24 +26,26 @@ def index():
 
     if export and current_user.is_admin():
         export = Doctor.dump(pagination)
-        return excel.make_response_from_array(export,
-                                              'xlsx',
-                                              file_name='Médicos.xlsx')
+        return excel.make_response_from_array(
+            export, 'xlsx', file_name='Médicos.xlsx'
+        )
 
     if json:
         return jsonify({'result': [d.serialize() for d in doctors]})
 
-    return render_template('doctors/index.html',
-                           icon='fa-user-md',
-                           title='Médicos',
-                           clean_url=url_for('doctors.index'),
-                           create_url=url_for('doctors.create'),
-                           form=form,
-                           filters=filters,
-                           criteria=criteria,
-                           order=order,
-                           pagination=pagination,
-                           doctors=doctors)
+    return render_template(
+        'doctors/index.html',
+        icon='fa-user-md',
+        title='Médicos',
+        clean_url=url_for('doctors.index'),
+        create_url=url_for('doctors.create'),
+        form=form,
+        filters=filters,
+        criteria=criteria,
+        order=order,
+        pagination=pagination,
+        doctors=doctors
+    )
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
@@ -58,12 +60,14 @@ def create():
         doctor.save()
         return jsonify({'redirect': url_for('doctors.index')})
 
-    return render_template('doctors/view.html',
-                           icon='fa-user-md',
-                           title='Adicionar Médico',
-                           form=form,
-                           method='post',
-                           color='success')
+    return render_template(
+        'doctors/view.html',
+        icon='fa-user-md',
+        title='Adicionar Médico',
+        form=form,
+        method='post',
+        color='success'
+    )
 
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
@@ -82,13 +86,15 @@ def edit(id):
         doctor.update()
         return jsonify({'redirect': url_for('doctors.index')})
 
-    return render_template('doctors/view.html',
-                           icon='fa-user-md',
-                           title=title,
-                           form=form,
-                           method='put',
-                           color='warning',
-                           view=bool(view))
+    return render_template(
+        'doctors/view.html',
+        icon='fa-user-md',
+        title=title,
+        form=form,
+        method='put',
+        color='warning',
+        view=bool(view)
+    )
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

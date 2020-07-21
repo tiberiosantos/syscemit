@@ -28,7 +28,8 @@ class Doctor(CRUDMixin, db.Model):
             orders = (getattr(getattr(cls, criteria), order)(), )
 
         return cls.query.filter(db.or_(*filters)).order_by(*orders).paginate(
-            page, per_page=current_app.config['PER_PAGE'], error_out=False)
+            page, per_page=current_app.config['PER_PAGE'], error_out=False
+        )
 
     def serialize(self):
         name = [self.name]

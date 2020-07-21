@@ -26,24 +26,26 @@ def index():
 
     if export and current_user.is_admin():
         export = Address.dump(pagination)
-        return excel.make_response_from_array(export,
-                                              'xlsx',
-                                              file_name='Endereços.xlsx')
+        return excel.make_response_from_array(
+            export, 'xlsx', file_name='Endereços.xlsx'
+        )
 
     if json:
         return jsonify({'result': [a.serialize() for a in addresses]})
 
-    return render_template('addresses/index.html',
-                           icon='fa-map-signs',
-                           title='Endereços',
-                           clean_url=url_for('addresses.index'),
-                           create_url=url_for('addresses.create'),
-                           form=form,
-                           filters=filters,
-                           criteria=criteria,
-                           order=order,
-                           pagination=pagination,
-                           addresses=addresses)
+    return render_template(
+        'addresses/index.html',
+        icon='fa-map-signs',
+        title='Endereços',
+        clean_url=url_for('addresses.index'),
+        create_url=url_for('addresses.create'),
+        form=form,
+        filters=filters,
+        criteria=criteria,
+        order=order,
+        pagination=pagination,
+        addresses=addresses
+    )
 
 
 @bp.route('/adicionar', methods=['GET', 'POST'])
@@ -59,12 +61,14 @@ def create():
         address.save()
         return jsonify({'redirect': url_for('addresses.index')})
 
-    return render_template('addresses/view.html',
-                           icon='fa-map-signs',
-                           title='Adicionar Endereço',
-                           form=form,
-                           method='post',
-                           color='success')
+    return render_template(
+        'addresses/view.html',
+        icon='fa-map-signs',
+        title='Adicionar Endereço',
+        form=form,
+        method='post',
+        color='success'
+    )
 
 
 @bp.route('/<int:id>', methods=['GET', 'PUT'])
@@ -84,13 +88,15 @@ def edit(id):
         address.update()
         return jsonify({'redirect': url_for('addresses.index')})
 
-    return render_template('addresses/view.html',
-                           icon='fa-map-signs',
-                           title=title,
-                           form=form,
-                           method='put',
-                           color='warning',
-                           view=bool(view))
+    return render_template(
+        'addresses/view.html',
+        icon='fa-map-signs',
+        title=title,
+        form=form,
+        method='put',
+        color='warning',
+        view=bool(view)
+    )
 
 
 @bp.route('/<int:id>', methods=['DELETE'])

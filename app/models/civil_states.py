@@ -7,9 +7,9 @@ from ..mixins import CRUDMixin
 class CivilState(CRUDMixin, db.Model):
     __tablename__ = 'civil_states'
     description = db.Column(db.String(15), nullable=False)
-    deceased = db.relationship('Deceased',
-                               backref='civil_states',
-                               lazy='dynamic')
+    deceased = db.relationship(
+        'Deceased', backref='civil_states', lazy='dynamic'
+    )
 
     @classmethod
     def populate(cls):

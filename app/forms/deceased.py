@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (DateField, DateTimeField, FormField, IntegerField,
-                     RadioField, SelectField, StringField, SubmitField)
+from wtforms import (
+    DateField, DateTimeField, FormField, IntegerField, RadioField, SelectField,
+    StringField, SubmitField
+)
 from wtforms.validators import InputRequired, Length, Optional
 from wtforms.widgets import TextArea
 from wtforms.widgets.html5 import NumberInput
@@ -22,77 +24,93 @@ class DeceasedForm(FlaskForm):
     registration = StringField(
         'Matrícula do Óbito',
         [InputRequired(message='Insira a matrícula!'),
-         Length(1, 40)])
-    gender = RadioField('Gênero', [InputRequired(message='Insira o gênero!')],
-                        choices=[('M', 'Masculino'), ('F', 'Feminino')])
-    ethnicity_id = SelectField('Etnia',
-                               [InputRequired(message='Insira a etnia!')],
-                               choices=(),
-                               coerce=int)
-    civil_state_id = SelectField('Estado Civil', [Optional()],
-                                 choices=(),
-                                 coerce=int)
+         Length(1, 40)]
+    )
+    gender = RadioField(
+        'Gênero', [InputRequired(message='Insira o gênero!')],
+        choices=[('M', 'Masculino'), ('F', 'Feminino')]
+    )
+    ethnicity_id = SelectField(
+        'Etnia', [InputRequired(message='Insira a etnia!')],
+        choices=(),
+        coerce=int
+    )
+    civil_state_id = SelectField(
+        'Estado Civil', [Optional()], choices=(), coerce=int
+    )
     age = IntegerField('Idade', [Optional()], widget=NumberInput(min=0))
-    birth_date = DateField('Data de Nascimento', [Optional()],
-                           format='%d/%m/%Y')
-    birthplace_id = SelectField('Naturalidade', [Optional()],
-                                choices=(),
-                                coerce=int)
+    birth_date = DateField(
+        'Data de Nascimento', [Optional()], format='%d/%m/%Y'
+    )
+    birthplace_id = SelectField(
+        'Naturalidade', [Optional()], choices=(), coerce=int
+    )
     filiations = StringField('Filiação', [Optional(), Length(1, 255)])
     home_city_id = SelectField('Cidade', [Optional()], choices=(), coerce=int)
-    home_address_id = SelectField('Endereço Residencial', [Optional()],
-                                  choices=(),
-                                  coerce=int)
+    home_address_id = SelectField(
+        'Endereço Residencial', [Optional()], choices=(), coerce=int
+    )
     home_address_number = StringField('Número', [Optional(), Length(1, 5)])
     home_address_complement = StringField(
-        'Complemento', [Optional(), Length(1, 255)])
+        'Complemento', [Optional(), Length(1, 255)]
+    )
     death_datetime = DateTimeField(
         'Data de Falecimento',
         [InputRequired(message='Insira a data de falecimento!')],
-        format='%d/%m/%Y %H:%M')
+        format='%d/%m/%Y %H:%M'
+    )
     death_city_id = SelectField('Cidade', [Optional()], choices=(), coerce=int)
     death_address_id = SelectField(
         'Endereço de Falecimento',
         [InputRequired('Selecione o endereço de falecimento')],
         choices=(),
-        coerce=int)
+        coerce=int
+    )
     death_address_number = StringField('Número', [Optional(), Length(1, 5)])
     death_address_complement = StringField(
-        'Complemento', [Optional(), Length(1, 255)])
+        'Complemento', [Optional(), Length(1, 255)]
+    )
     cause = StringField(
         'Causa da Morte',
         [InputRequired(message='Insira a causa da morte!'),
          Length(1, 1500)],
-        widget=TextArea())
-    zone_id = SelectField('Região', [InputRequired('Insira a região')],
-                          choices=(),
-                          coerce=int)
-    grave_id = SelectField('Túmulo',
-                           [InputRequired(message='Insira o túmulo!')],
-                           choices=(),
-                           coerce=int)
+        widget=TextArea()
+    )
+    zone_id = SelectField(
+        'Região', [InputRequired('Insira a região')], choices=(), coerce=int
+    )
+    grave_id = SelectField(
+        'Túmulo', [InputRequired(message='Insira o túmulo!')],
+        choices=(),
+        coerce=int
+    )
     doctor_id = SelectField(
         'Médico', [InputRequired(message='Insira o nome do médico!')],
         choices=(),
-        coerce=int)
-    registry_id = SelectField('Cartório',
-                              [InputRequired(message='Insira o cartório!')],
-                              choices=(),
-                              coerce=int)
-    annotation = StringField('Observações / Averbações',
-                             [Optional(), Length(1, 1500)],
-                             widget=TextArea())
+        coerce=int
+    )
+    registry_id = SelectField(
+        'Cartório', [InputRequired(message='Insira o cartório!')],
+        choices=(),
+        coerce=int
+    )
+    annotation = StringField(
+        'Observações / Averbações', [Optional(), Length(1, 1500)],
+        widget=TextArea()
+    )
     submit = SubmitField('Salvar')
 
     def __init__(self, *args, **kwargs):
         super(DeceasedForm, self).__init__(*args, **kwargs)
-        self.ethnicity_id.choices = [(e.id, e.description)
-                                     for e in Ethnicity.query.order_by(
-                                         Ethnicity.description.asc()).all()]
+        self.ethnicity_id.choices = [
+            (e.id, e.description)
+            for e in Ethnicity.query.order_by(Ethnicity.description.asc()).all()
+        ]
         self.ethnicity_id.choices.insert(0, (0, ''))
-        self.civil_state_id.choices = [(e.id, e.description)
-                                       for e in CivilState.query.order_by(
-                                           CivilState.description.asc()).all()]
+        self.civil_state_id.choices = [
+            (e.id, e.description) for e in
+            CivilState.query.order_by(CivilState.description.asc()).all()
+        ]
         self.civil_state_id.choices.insert(0, (0, ''))
 
     def refill(cls):
@@ -110,9 +128,7 @@ class DeceasedForm(FlaskForm):
 
         if cls.death_address_id.data:
             address = Address.get_or_404(cls.death_address_id.data)
-            cls.death_address_id.choices = [
-                tuple(address.serialize().values())
-            ]
+            cls.death_address_id.choices = [tuple(address.serialize().values())]
             cls.death_city_id.data = address.city.id
             cls.death_city_id.choices = [
                 tuple(address.city.serialize().values())
@@ -145,7 +161,7 @@ class DeceasedHeadersForm(FlaskForm):
 class DeceasedSearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
     filters = FormField(DeceasedHeadersForm)
-    criteria = SelectField('Ordenar por',
-                           choices=get_fields(DeceasedHeadersForm),
-                           default='name')
+    criteria = SelectField(
+        'Ordenar por', choices=get_fields(DeceasedHeadersForm), default='name'
+    )
     order = SelectField('Ordem', choices=ORDERS, default='asc')

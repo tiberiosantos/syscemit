@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from flask_wtf import FlaskForm
-from wtforms import (FormField, IntegerField, SelectField, StringField,
-                     SubmitField)
+from wtforms import (
+    FormField, IntegerField, SelectField, StringField, SubmitField
+)
 from wtforms.validators import InputRequired, Length
 
 from ..models.cities import City
@@ -13,19 +14,21 @@ class RegistryForm(FlaskForm):
     name = StringField(
         'Nome',
         [InputRequired(message='Insira o nome do cartório!'),
-         Length(1, 255)])
-    city_id = SelectField('Cidade',
-                          [InputRequired(
-                              message='Selecione a cidade do cartório!')],
-                          choices=(),
-                          coerce=int)
+         Length(1, 255)]
+    )
+    city_id = SelectField(
+        'Cidade', [InputRequired(message='Selecione a cidade do cartório!')],
+        choices=(),
+        coerce=int
+    )
     submit = SubmitField('Salvar')
 
     def refill(cls):
         if cls.city_id.data:
             city = City.get(cls.city_id.data)
-            cls.city_id.choices = [(city.id,
-                                    '{c.name} - {c.state.uf}'.format(c=city))]
+            cls.city_id.choices = [
+                (city.id, '{c.name} - {c.state.uf}'.format(c=city))
+            ]
 
 
 class RegistryHeadersForm(FlaskForm):
@@ -36,7 +39,7 @@ class RegistryHeadersForm(FlaskForm):
 class RegistrySearchForm(FlaskForm):
     page = IntegerField('Página', default=1)
     filters = FormField(RegistryHeadersForm)
-    criteria = SelectField('Ordenar por',
-                           choices=get_fields(RegistryHeadersForm),
-                           default='name')
+    criteria = SelectField(
+        'Ordenar por', choices=get_fields(RegistryHeadersForm), default='name'
+    )
     order = SelectField('Ordem', choices=ORDERS, default='asc')

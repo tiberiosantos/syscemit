@@ -6,8 +6,10 @@ from wtforms.validators import InputRequired
 
 
 class AuthLoginForm(FlaskForm):
-    login = StringField('Login',
-                        [InputRequired(message='Um login é requerido!')])
-    password = PasswordField('Senha',
-                             [InputRequired(message='Uma senha é requerida!')])
+    login = StringField(
+        'Login', [InputRequired(message='Um login é requerido!')]
+    )
+    password = PasswordField(
+        'Senha', [InputRequired(message='Uma senha é requerida!')]
+    )
     submit = SubmitField('Entrar')
