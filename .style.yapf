@@ -1,0 +1,4 @@
+[style]
+based_on_style = facebook
+ALIGN_CLOSING_BRACKET_WITH_VISUAL_INDENT = True
+COLUMN_LIMIT = 79
