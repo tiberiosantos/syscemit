@@ -5,12 +5,12 @@ Instale o virtualenv em seu ambiente:
 # apt-get install virtualenvwrapper python3-virtualenv
 ```
 
-## 1.2 Criando um ambiente virtual
+### 1.2 Criando um ambiente virtual
 ```bash
 mkvirtualenv syscemit
 ```
 
-## 1.3 Abrindo o ambiente Virtual
+### 1.3 Abrindo o ambiente Virtual
 ```bash
 workon syscemit
 ```
@@ -25,36 +25,36 @@ pip install -r dev-requirements.txt
 ./console initdb
 ```
 
-## 3.1 Criando os scripts de migração do banco de dados.
-### 3.1.1 Cria a estrutura dos scripts de migração.
+### 3.1 Criando os scripts de migração do banco de dados.
+#### 3.1.1 Criando a estrutura dos scripts de migração.
 ```bash
 ./console db init
 ```
-### 3.1.2 Verificando por mudanças e criando os scripts dos scripts migração.
+#### 3.1.2 Verificando por mudanças e criando os scripts dos scripts migração.
 ```bash
 ./console db migrate
 ```
-### 3.1.3 Aplica as mudanças.
+#### 3.1.3 Aplicando as mudanças.
 ```bash
 ./console db upgrade
 ```
 
-## 3.2 Criando um usuário administrativo.
+### 3.2 Criando um usuário administrativo.
 ```bash
 ./console user create -n admin -l admin -t 1
 ```
 
-## 3.3 Criando um usuário com perfil de funcionário.
+### 3.3 Criando um usuário com perfil de funcionário.
 ```bash
 ./console user create -n user -l user -t 2
 ```
 
-## 3.4 Exibindo os usuários do syscemit.
+### 3.4 Exibindo os usuários do syscemit.
 ```bash
 ./console user list
 ```
 
-## 3.5 Removendo um usuário do syscemit.
+### 3.5 Removendo um usuário do syscemit.
 ```bash
 ./console user delete <LOGIN>
 ```
@@ -71,12 +71,14 @@ pip install -r dev-requirements.txt
 ./seeds/utils/litedump restore seeds/dev-dump.gz storage-dev.db
 ```
 
-## 5. Rodando o servidor de desenvolvimento. Utilize um navegador Web e acesse o sistema através da url [http://localhost:5000](http://localhost:5000)
+## 5. Rodando o servidor de desenvolvimento.
+Utilize um navegador Web e acesse o sistema através da url [http://localhost:5000](http://localhost:5000)
 ```bash
 ./console run
 ```
 
-## 6. Abrindo um terminal interativo para a interação com sistema. Para sair utilize CTRL+D.
+## 6. Abrindo um terminal interativo para a interação com sistema.
+Para sair utilize CTRL+D.
 ```bash
 ./console shell
 ```
@@ -94,22 +96,24 @@ Se você estiver utilizando um usuário comum, logue-se utilizando o comando aba
 su -
 ```
 
-## 8.1 Extraia o arquivo compactado do syscemit para o diretório de instalação.
+### 8.1 Preparando os arquivos de instalação
+Extraia o arquivo compactado do syscemit para o diretório de instalação.
 ```bash
 tar -xvf syscemit.tar.xz -C /srv
 ```
 
-## 8.2 Adicione um usuário de sistema para o syscemit.
+### 8.2 Adicionando um usuário de sistema para o syscemit
 ```bash
 adduser --quiet --system --ingroup daemon --no-create-home --home "/srv/syscemit" --shell /bin/bash syscemit
 ```
 
-# 8.3 Altere as permissões do diretório de instalação do syscemit.
+### 8.3 Altere as permissões do diretório de instalação do syscemit.
 ```bash
 chown -R syscemit:daemon /srv/syscemit
 ```
 
-# 8.4 Logue-se com o usuário que acabamos e instale as depêndencias do sistema. Um detalhe é que somente o usuário root pode logar como um usuário de sistema.
+### 8.4 Criando um ambiente virtual e instalando as dependências
+Logue-se com o usuário que acabamos e instale as dependências do sistema. Um detalhe é que somente o usuário root pode logar como um usuário de sistema.
 ```bash
 su - syscemit
 virtualenv -p /usr/bin/python3 .env
@@ -117,15 +121,18 @@ source .env/bin/activate
 pip install -r requirements.txt
 ```
 
-# 8.5 Repita os procedimentos da etapa *3* para criar e popular o banco de dados. Também poderá ser utilizado um backup utilizando o procedimento *4.2*.
+### 8.5 Populando o banco de dados
+Repita os procedimentos da etapa *3* para criar e popular o banco de dados. Também poderá ser utilizado um backup utilizando o procedimento *4.2*.
 
-# 8.6 Copie os arquivos de inicialização e configuração para seus respectivos diretórios.
+### 8.6 Instalando a unidade de inicialização dos SystemD
+Copie os arquivos de inicialização e configuração para seus respectivos diretórios.
 ```bash
 cp docs/syscemit.service /lib/system/system/
 cp docs/syscemit /etc/default/syscemit
 ```
 
-# 8.7 Ative e inicie o serviço. A partir desta etapa você poderá acessar o sistema através de um navegador web.
+### 8.7 Ativando a inicialização automática
+A partir desta etapa você poderá acessar o sistema através de um navegador web.
 ```bash
 systemctl enable syscemit
 systemctl start syscemit

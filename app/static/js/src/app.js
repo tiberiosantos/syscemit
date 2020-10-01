@@ -80,7 +80,7 @@ var app = {
             for (var p of params.entries()) {
               state[p[0]] = p[1];
             }
-            history.pushState(state, document.title, url.toString());
+            history.replaceState(state, document.title, url.toString());
             params.set('export', 1);
             url.search = params.toString();
             $('.export').attr('href', url.toString());
