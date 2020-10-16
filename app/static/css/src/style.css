@@ -4,6 +4,10 @@ body {
   animation-fill-mode: forwards;
 }
 
+.table th, .table td {
+  width: auto;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
